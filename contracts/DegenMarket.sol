@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/interfaces/IERC721.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 //errors
 error DegenMarket_PriceMustBeAboveZero();
@@ -100,6 +100,7 @@ contract DegenMarket is ReentrancyGuard{
 
     /// Buy the listed NFT
     function buyItem(address nftAddress,uint256 tokenId) external payable nonReentrant isListed(nftAddress, tokenId){
+        
         Listing memory listedItem = s_listings[nftAddress][tokenId];
 
         if(msg.value < listedItem.price){

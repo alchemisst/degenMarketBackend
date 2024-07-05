@@ -1,7 +1,11 @@
-require("@nomicfoundation/hardhat-toolbox")
+require("@nomiclabs/hardhat-waffle")
+require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
-
+require("solidity-coverage")
+require("hardhat-gas-reporter")
+require("hardhat-contract-sizer")
 require("dotenv").config()
+
 
 /**
  * 
@@ -18,11 +22,11 @@ const POLYGON_MAINNET_RPC_URL =
     process.env.POLYGON_MAINNET_RPC_URL || "https://polygon-mainnet.alchemyapi.io/v2/your-api-key"
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
 // optional
-const MNEMONIC = process.env.MNEMONIC || "your mnemonic"
+// const MNEMONIC = process.env.MNEMONIC || "your mnemonic"
 
 // Your API key for Etherscan, obtain one at https://etherscan.io/
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
-const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "Your polygonscan API key"
+// const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "Your polygonscan API key"
 const REPORT_GAS = process.env.REPORT_GAS || false
 
 module.exports = {
@@ -34,11 +38,9 @@ module.exports = {
             //   url: MAINNET_RPC_URL
             // }
             chainId: 31337,
-          
         },
         localhost: {
             chainId: 31337,
-            
         },
         sepolia: {
             url: SEPOLIA_RPC_URL,
@@ -48,7 +50,7 @@ module.exports = {
             //   },
             saveDeployments: true,
             chainId: 11155111,
-            blockConfirmations:6
+            blockConfirmations: 6
         },
         mainnet: {
             url: MAINNET_RPC_URL,
@@ -67,11 +69,19 @@ module.exports = {
         },
     },
     etherscan: {
-        // npx hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
         apiKey: {
             sepolia: ETHERSCAN_API_KEY,
-            polygon: POLYGONSCAN_API_KEY,
         },
+        customChains: [
+            {
+                network: "sepolia",
+                chainId: 11155111,
+                urls: {
+                    apiURL: "https://api-sepolia.etherscan.io/api",
+                    browserURL: "https://sepolia.etherscan.io"
+                }
+            }
+        ]
     },
     gasReporter: {
         enabled: REPORT_GAS,
@@ -98,9 +108,13 @@ module.exports = {
             {
                 version: "0.8.24",
             },
+            {
+                version: "0.4.24",
+            },
         ],
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests
     },
+    debug:true
 }
